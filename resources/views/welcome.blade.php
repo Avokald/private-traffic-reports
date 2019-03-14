@@ -10,6 +10,7 @@
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
 
         <!-- Styles -->
+        <link href="/public/css/bootstrap.min.css" type="text/css">
         <style>
             html, body {
                 background-color: #fff;
@@ -61,39 +62,53 @@
             .m-b-md {
                 margin-bottom: 30px;
             }
+
+            #map {
+                height: 100%;
+            }
         </style>
     </head>
     <body>
-        <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))
-                <div class="top-right links">
-                    @auth
-                        <a href="{{ url('/home') }}">Home</a>
-                    @else
-                        <a href="{{ route('login') }}">Login</a>
+        <div id="map"></div>
+        <script>
+            var map;
 
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}">Register</a>
-                        @endif
-                    @endauth
-                </div>
-            @endif
+            function initMap() {
 
-            <div class="content">
-                <div class="title m-b-md">
-                    Laravel
-                </div>
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: { lat: 52.279141, lng: 76.953151 },
+                    zoom: 13
+                });
 
-                <div class="links">
-                    <a href="https://laravel.com/docs">Docs</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://blog.laravel.com">Blog</a>
-                    <a href="https://nova.laravel.com">Nova</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
-                </div>
-            </div>
-        </div>
+                var infowindow = new google.maps.InfoWindow();
+
+                @foreach ($reports as $report)
+
+                    var marker = new google.maps.Marker({
+                        position: { lat: {{ $report->lat }}, lng: {{ $report->lng }} },
+                        map: map,
+                        title: '{{ $report->title }}'
+                    });
+
+                    google.maps.event.addListener(marker, 'click', function() {
+                        infowindow.close(); // Close previously opened infowindow
+                        infowindow.setPosition(new google.maps.LatLng(this.getPosition().lat(), this.getPosition().lng()));
+                        infowindow.setContent(
+                            '<div id="content">'+
+                                '<div id="siteNotice">'+
+                                '</div>'+
+                                '<h1 id="firstHeading" class="firstHeading">{{ $report->title }}</h1>'+
+                                '<div id="bodyContent">'+
+                                    '<p>{{ $report->description }}</p>'+
+                                '</div>'+
+                            '</div>'
+                        );
+                        infowindow.open(map, this);
+                    });
+                @endforeach
+            }
+        </script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYzwvnXcXQFr16PVDQ4mva-LK41IUli6I&callback=initMap"
+                async defer></script>
     </body>
 </html>

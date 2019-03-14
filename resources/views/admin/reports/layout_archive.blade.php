@@ -18,11 +18,11 @@
                     <td>{{ $report->created_at }}</td>
                     <td class="text-center">
                         <div class="btn-group">
-                            <a href="{{ route('admin.report.edit', $report->id) }}"
+                            <a href="{{ route('admin.reports.edit', $report->id) }}"
                                class="btn btn-xs btn-default" data-toggle="tooltip" title="Edit">
                                 <i class="fa fa-pencil">Edit</i>
                             </a>
-                            <form action="{{ route('admin.report.destroy', $report->id) }}"
+                            <form action="{{ route('admin.reports.destroy', $report->id) }}"
                                   method="post" class="hidden" id="form-element-delete-{{ $key }}">
                                 @csrf
                                 @method('delete')

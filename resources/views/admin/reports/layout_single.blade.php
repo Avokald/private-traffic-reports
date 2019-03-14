@@ -3,8 +3,8 @@
         <div class="block-content">
             <form method="post" action="{{
                             $report->id
-                                ? route('admin.report.update', $report->id)
-                                : route('admin.report.store') }}">
+                                ? route('admin.reports.update', $report->id)
+                                : route('admin.reports.store') }}">
                 @csrf
                 @if ( $report->id )
                     @method('patch')
@@ -46,7 +46,7 @@
                 <div class="card">
                     <div class="card-content">
                         <button>Сохранить</button>
-                        <a href="{{ route('admin.report.index') }}" class="btn btn-link">Отменить</a>
+                        <a href="{{ route('admin.reports.index') }}" class="btn btn-link">Отменить</a>
                     </div>
                 </div>
             </form>
