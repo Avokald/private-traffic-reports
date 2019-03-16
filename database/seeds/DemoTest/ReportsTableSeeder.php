@@ -25,6 +25,7 @@ class ReportsTableSeeder extends Seeder
             'description' => 'Test description 2',
             'lat' => '52.289141',
             'lng' => '76.953151',
+            'videos' => ['https://www.youtube.com/watch?v=HEfHFsfGXjs'],
         ]);
 
         Report::create([
@@ -32,6 +33,12 @@ class ReportsTableSeeder extends Seeder
             'description' => 'Test description 3',
             'lat' => '52.269141',
             'lng' => '76.953151',
+            'videos' => [
+                'https://www.youtube.com/watch?v=jsYwFizhncE',
+                'https://www.youtube.com/watch?v=PFDu9oVAE-g',
+                'https://www.youtube.com/watch?v=aircAruvnKk',
+                'https://www.youtube.com/watch?v=3d6DsjIBzJ4',
+            ],
         ]);
     }
 }

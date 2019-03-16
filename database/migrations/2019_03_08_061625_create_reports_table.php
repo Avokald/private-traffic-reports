@@ -19,6 +19,7 @@ class CreateReportsTable extends Migration
             $table->text('description');
             $table->string('lat');
             $table->string('lng');
+            $table->json('videos')->nullable()->default(null);
             $table->timestamps();
         });
     }

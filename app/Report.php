@@ -11,5 +11,10 @@ class Report extends Model
         'description',
         'lat',
         'lng',
+        'videos',
+    ];
+
+    protected $casts = [
+        'videos' => 'array',
     ];
 }
