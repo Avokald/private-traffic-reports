@@ -1,55 +1,125 @@
-<div class="content content-narrow">
-    <div class="block">
-        <div class="block-content">
-            <form method="post" action="{{
-                            $report->id
-                                ? route('admin.reports.update', $report->id)
-                                : route('admin.reports.store') }}">
-                @csrf
-                @if ( $report->id )
-                    @method('patch')
-                @endif
+@extends('admin.models')
+@section('style')
+    #map {
+        height: 70vh;
+    }
+@endsection
 
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Основные</h3>
-                    </div>
 
-                    <div class="card-content">
+@section('content')
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/admin/reports/">Список проишествий</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Проишествие</li>
+        </ol>
+    </nav>
 
-                        <div class="form-group col-sm-12">
-                            <div class="form-material push-20">
-                                <input class="form-control"
-                                       type="text"
-                                       name="title"
-                                       value="{{ $report->title }}"
-                                       required
-                               >
-                                <label>Заголовок</label>
-                            </div>
+        <div class="container-fluid">
+            <div class="">
+                <form method="post" action="{{
+                                $report->id
+                                    ? route('admin.reports.update', $report->id)
+                                    : route('admin.reports.store') }}">
+                    @csrf
+                    @if ( $report->id )
+                        @method('patch')
+                    @endif
+
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h4>Заголовок</h4>
                         </div>
+                        @include('partials.text', [
+                            'label' => '',
+                            'name' => 'title',
+                            'value' => $report->title ?? '',
+                        ])
+                    </div>
 
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h4>Описание</h4>
+                        </div>
+                        <div class="form-group">
+                            @include('partials.textarea', [
+                                'label' => '',
+                                'name' => 'description',
+                                'value' => $report->description ?? '',
+                            ])
+                            </div>
                     </div>
-                </div>
 
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Описание</h3>
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h4>Видеозаписи</h4>
+                        </div>
+                        <div class="form-group">
+                            @include('partials.repeater', [
+                                'label' => '',
+                                'name' => 'videos[]',
+                                'class' => 'videos-element',
+                                'template' => 'partials.text',
+                                'value' => $report->videos ?? null,
+                            ])
+                        </div>
                     </div>
-                    <div class="card-content card-content-full">
-                        <textarea class="form-control" name="excerpt">{{
-                            $report->description
-                        }}</textarea>
-                    </div>
-                </div>
 
-                <div class="card">
-                    <div class="card-content">
-                        <button>Сохранить</button>
-                        <a href="{{ route('admin.reports.index') }}" class="btn btn-link">Отменить</a>
+
+
+
+                    <input type="hidden"
+                           name="lat"
+                           value="{{ $report->lat ?? '' }}"
+                           class="report-lat"
+                    >
+
+                    <input type="hidden"
+                           name="lng"
+                           value="{{ $report->lng ?? '' }}"
+                           class="report-lng"
+                    >
+
+                    <div id="map"></div>
+                    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYzwvnXcXQFr16PVDQ4mva-LK41IUli6I&callback=initMap"
+                            async defer></script>
+                    <script>
+                        var map;
+
+                        function initMap() {
+
+                            map = new google.maps.Map(document.getElementById('map'), {
+                                center: { lat: 52.279141, lng: 76.953151 },
+                                zoom: 13
+                            });
+
+                            var marker = new google.maps.Marker({
+                                map: map,
+                                @if ($report->lng && $report->lat)
+
+                                    position: { lat: {{ $report->lat }}, lng: {{ $report->lng }} },
+                                @endif
+                            });
+
+                            google.maps.event.addListener(map, 'click', function(event) {
+                                var lat = event.latLng['lat']();
+                                var lng = event.latLng['lng']();
+
+                                marker.setPosition(new google.maps.LatLng(lat, lng));
+
+                                document.getElementsByClassName("report-lat")[0].value = lat;
+                                document.getElementsByClassName("report-lng")[0].value = lng;
+
+                            });
+                        }
+                    </script>
+
+                    <div class="card">
+                        <div class="card-content">
+                            <button>Сохранить</button>
+                            <a href="{{ route('admin.reports.index') }}" class="btn btn-link">Отменить</a>
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
-    </div>
-</div>
+@endsection

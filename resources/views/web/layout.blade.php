@@ -16,4 +16,11 @@
 </main>
 
 </body>
+
+@stack('scripts')
+
+
+<script>
+    @stack('script')
+</script>
 </html>
