@@ -10,31 +10,15 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class ReportTest extends TestCase
 {
-    use RefreshDatabase;
-
-    public function setUp(): void
+    public static function setUpBeforeClass() : void
     {
-        parent::setUp();
-        $this->artisan('db:seed');
+        shell_exec('php artisan migrate:fresh --seed');
     }
 
     public static function tearDownAfterClass() : void
     {
         parent::tearDownAfterClass();
         shell_exec('php artisan migrate:fresh --seed');
-    }
-
-
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
-    public function testExample() : void
-    {
-        $response = $this->get('/');
-
-        $response->assertSee('<div id="map"></div>');
     }
 
     public function testNewReportInDatabase()
@@ -119,6 +103,7 @@ class ReportTest extends TestCase
         $report->description = 'Edited report description';
         $report->lat = '52.269999';
         $report->lng = '76.959999';
+        $report->videos = null;
         $report->save();
 
         $dbreport = Report::first();
@@ -129,4 +114,53 @@ class ReportTest extends TestCase
         $this->assertEquals($dbreport->lng, '76.959999');
         $this->assertEquals($dbreport->videos, null);
     }
+
+
+    public function testNewReportWithImagesInDatabase()
+    {
+        $report = factory(\App\Report::class)->state('test')->create([
+            'images' => [
+                '/public/assets/images/auth-img.png',
+                '/public/assets/images/auth-img-2.png',
+                '/public/assets/images/auth-img-3.png',
+                '/public/assets/images/catword.png',
+                '/public/assets/images/404.png',
+            ],
+        ]);
+
+        $dbreport = Report::all()->last();
+        $this->assertEqualsCanonicalizing($dbreport->images, [
+            '/public/assets/images/auth-img.png',
+            '/public/assets/images/auth-img-2.png',
+            '/public/assets/images/auth-img-3.png',
+            '/public/assets/images/catword.png',
+            '/public/assets/images/404.png',
+        ]);
+    }
+
+    public function testReportImagesAreDisplayedOnFrontPage()
+    {
+        $report = factory(\App\Report::class)->state('test')->create([
+            'images' => [
+                '/public/assets/images/auth-img.png',
+                '/public/assets/images/auth-img-2.png',
+                '/public/assets/images/auth-img-3.png',
+                '/public/assets/images/catword.png',
+                '/public/assets/images/404.png',
+            ],
+        ]);
+
+        $response = $this->get('/');
+
+        $response->assertStatus(200);
+
+        $response->assertSeeInOrder([
+            '/public/assets/images/auth-img.png',
+            '/public/assets/images/auth-img-2.png',
+            '/public/assets/images/auth-img-3.png',
+            '/public/assets/images/catword.png',
+            '/public/assets/images/404.png',
+        ]);
+    }
+
 }

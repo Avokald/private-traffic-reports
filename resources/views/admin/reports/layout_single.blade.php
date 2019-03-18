@@ -51,6 +51,21 @@
 
                     <div class="card mb-3">
                         <div class="card-header">
+                            <h4>Изображения</h4>
+                        </div>
+                        <div class="form-group">
+                            @include('partials.repeater', [
+                                'label' => '',
+                                'name' => 'images[]',
+                                'class' => 'images-element',
+                                'template' => 'partials.text',
+                                'value' => $report->images ?? null,
+                            ])
+                        </div>
+                    </div>
+
+                    <div class="card mb-3">
+                        <div class="card-header">
                             <h4>Видеозаписи</h4>
                         </div>
                         <div class="form-group">
