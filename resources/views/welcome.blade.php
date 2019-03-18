@@ -10,90 +10,143 @@
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
 
         <!-- Styles -->
+        <link rel="stylesheet" href="/public/css/normalize.css" type="text/css">
+        <link rel="stylesheet" href="/public/css/bootstrap.min.css" type="text/css">
+
         <style>
             html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: 'Nunito', sans-serif;
-                font-weight: 200;
                 height: 100vh;
                 margin: 0;
             }
 
-            .full-height {
-                height: 100vh;
+            #map {
+                height: 100%;
             }
 
-            .flex-center {
-                align-items: center;
+            .attachment_block {
+                display: block;
+                width: 100%;
+            }
+            .attachment {
+                width: 160px;
+                height: 120px;
+            }
+
+            .video_element {
                 display: flex;
-                justify-content: center;
+                flex-direction: row;
+                flex-wrap: wrap;
             }
 
-            .position-ref {
-                position: relative;
-            }
-
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
-
-            .content {
-                text-align: center;
-            }
-
-            .title {
-                font-size: 84px;
-            }
-
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 13px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-
-            .m-b-md {
-                margin-bottom: 30px;
-            }
         </style>
     </head>
     <body>
-        <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))
-                <div class="top-right links">
-                    @auth
-                        <a href="{{ url('/home') }}">Home</a>
-                    @else
-                        <a href="{{ route('login') }}">Login</a>
+        <div id="map"></div>
 
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}">Register</a>
-                        @endif
-                    @endauth
-                </div>
-            @endif
+        <script src="/public/js/jquery.min.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYzwvnXcXQFr16PVDQ4mva-LK41IUli6I&callback=initMap"
+                async defer></script>
 
-            <div class="content">
-                <div class="title m-b-md">
-                    Laravel
-                </div>
+        <script src="/public/js/bootstrap.min.js"></script>
+        <script>
+            var map;
 
-                <div class="links">
-                    <a href="https://laravel.com/docs">Docs</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://blog.laravel.com">Blog</a>
-                    <a href="https://nova.laravel.com">Nova</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
-                </div>
-            </div>
-        </div>
+            function initMap() {
+
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: { lat: 52.279141, lng: 76.953151 },
+                    zoom: 13
+                });
+
+                var infowindow = new google.maps.InfoWindow();
+
+                @foreach ($reports as $report)
+
+                    var marker = new google.maps.Marker({
+                        position: { lat: {{ $report->lat }}, lng: {{ $report->lng }} },
+                        map: map,
+                        title: '{{ $report->title }}'
+                    });
+
+                    google.maps.event.addListener(marker, 'click', function() {
+                        infowindow.close(); // Close previously opened infowindow
+                        infowindow.setPosition(new google.maps.LatLng(this.getPosition().lat(), this.getPosition().lng()));
+                        infowindow.setContent(
+                            `<div id="content">
+                                <div id="siteNotice">
+                                </div>
+                                <h1 id="firstHeading" class="firstHeading">{{ $report->title }}</h1>
+                                <div id="bodyContent">
+                                    <p>{{ $report->description }}</p>
+
+                                    {{-- TODO Can be improved to use count() once --}}
+                                    @if (isset($report->images) && count($report->images))
+                                        <div id="carouselExampleIndicators" class="attachment_block carousel slide" data-ride="carousel">
+                                            <h3>Изображения: </h3>
+                                            <ol class="carousel-indicators">
+                                                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                                                @for($i = 1, $imageCount = count($report->images); $i < $imageCount; $i++)
+                                                    <li data-target="#carouselExampleIndicators" data-slide-to="{{ $i }}"></li>
+                                                @endfor
+                                            </ol>
+                                            <div class="carousel-inner attachment" role="listbox">
+                                                <div class="carousel-item active">
+                                                    <img class="d-block w-100" src="{{ $report->images[0] }}" alt="Report image">
+                                                </div>
+                                                @foreach($report->images as $key => $image)
+                                                    @if ($key)
+                                                        <div class="carousel-item">
+                                                            <img class="d-block w-100" src="{{ $image }}" alt="Report image">
+                                                        </div>
+                                                    @endif
+                                                @endforeach
+                                            </div>
+                                            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                <span class="sr-only">Previous</span>
+                                            </a>
+                                            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                <span class="sr-only">Next</span>
+                                            </a>
+                                        </div>
+                                    @endif
+
+                                    @if (isset($report->videos) && count($report->videos))
+                                        <div class="attachment_block">
+                                            <h3>Видеозаписи: </h3>
+                                            <div class="attachments">
+                                                @foreach ($report->videos as $video)
+                                                    @php
+                                                        preg_match(
+'/^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/',
+                                                            $video,
+                                                            $parsed_link);
+                                                    @endphp
+                                                    <div class="attachment">
+                                                        <iframe width="160"
+                                                                height="120"
+                                                                src="https://www.youtube.com/embed/{{ $parsed_link[5] }}"
+                                                                frameborder="0"
+                                                                allow="accelerometer;
+                                                                       autoplay;
+                                                                       encrypted-media;
+                                                                       gyroscope;
+                                                                       picture-in-picture"
+                                                                allowfullscreen>'
+                                                        </iframe>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>`
+                        );
+                        infowindow.open(map, this);
+                    });
+                @endforeach
+            }
+        </script>
     </body>
 </html>
