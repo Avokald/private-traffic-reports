@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Report;
-use App\Http\Controllers\Controller;
+use \App\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 
-class ReportController extends Controller
+class UserController extends Controller
 {
     public function __construct()
     {
@@ -20,9 +21,9 @@ class ReportController extends Controller
      */
     public function index()
     {
-        $reports = Report::all();
+        $users = User::all();
 
-        return view('admin.reports.layout_archive', compact('reports'));
+        return view('admin.users.layout_archive', compact('users'));
     }
 
     /**
@@ -32,8 +33,9 @@ class ReportController extends Controller
      */
     public function create()
     {
-        $report = new Report();
-        return view('admin.reports.layout_single', compact('report'));
+        $user = new User();
+
+        return view('admin.users.layout_single', compact('user'));
     }
 
     /**
@@ -44,8 +46,11 @@ class ReportController extends Controller
      */
     public function store(Request $request)
     {
-        $report = Report::create($request->toArray());
-        return redirect()->route('admin.reports.edit', $report->id);
+        $request_array = $request->toArray();
+        $request_array['password'] = Hash::make($request->password_unsafe);
+        $user = User::create($request_array);
+
+        return redirect()->route('admin.users.edit', $user->id);
     }
 
     /**
@@ -54,10 +59,10 @@ class ReportController extends Controller
      * @param  \App\Report  $report
      * @return \Illuminate\Http\Response
      */
-    public function edit(int $reportId)
+    public function edit(int $userId)
     {
-        $report = Report::findOrFail($reportId);
-        return view('admin.reports.layout_single', compact('report'));
+        $user = User::findOrFail($userId);
+        return view('admin.users.layout_single', compact('user'));
     }
 
     /**
@@ -67,14 +72,15 @@ class ReportController extends Controller
      * @param  \App\Report  $report
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, int $reportId)
+    public function update(Request $request, int $userId)
     {
-        $report = Report::findOrFail($reportId);
+        $user = User::findOrFail($userId);
 
-        $report->update($request->toArray());
+        $user->update($request->toArray());
+        $user->password = Hash::make($request->password_unsafe);
+        $user->save();
 
-        $report->save();
-        return redirect()->route('admin.reports.edit', $reportId);
+        return redirect()->route('admin.users.edit', $userId);
     }
 
     /**
@@ -83,10 +89,10 @@ class ReportController extends Controller
      * @param  \App\Report  $report
      * @return \Illuminate\Http\Response
      */
-    public function destroy(int $report_id)
+    public function destroy(int $user_id)
     {
-        $report = Report::findOrFail($report_id);
-        $report->delete();
+        $user = User::findOrFail($user_id);
+        $user->delete();
         return redirect()->back();
     }
 }

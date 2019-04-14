@@ -1,40 +1,32 @@
 @extends('admin.models')
 
 @section('content')
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item active">Все происшествия</li>
-        </ol>
-    </nav>
-
     <div class="table table-responsive table-hover">
         <table class="table table-striped table-vcenter table-bordered text-center">
             <thead class="thead-dark">
                 <th>id</th>
-                <th>Название</th>
-                <th>Широта</th>
-                <th>Долгота</th>
+                <th>Имя</th>
+                <th>Почта</th>
                 <th>Дата создания</th>
                 <th>Действия</th>
             </thead>
             <tbody>
-                @foreach ( $reports as $key => $report )
+                @foreach ( $users as $key => $user )
                     <tr>
-                        <td>{{ $report->id }}</td>
-                        <td>{{ $report->title }}</td>
-                        <td>{{ $report->lat }}</td>
-                        <td>{{ $report->lng }}</td>
-                        <td>{{ $report->created_at }}</td>
+                        <td>{{ $user->id }}</td>
+                        <td>{{ $user->name }}</td>
+                        <td>{{ $user->email }}</td>
+                        <td>{{ $user->created_at }}</td>
                         <td class="text-center">
                             <div class="btn-group">
-                                <a href="{{ route('admin.reports.edit', $report->id) }}"
+                                <a href="{{ route('admin.users.edit', $user->id) }}"
                                    class="btn btn-xs btn-default" data-toggle="tooltip" title="Изменить">
                                     <span class="fa-stack fa-lg">
                                       <i class="fa fa-square fa-stack-2x"></i>
                                       <i class="fa fa-pencil fa-stack-1x"></i>
                                     </span>
                                 </a>
-                                <form action="{{ route('admin.reports.destroy', $report->id) }}"
+                                <form action="{{ route('admin.users.destroy', $user->id) }}"
                                       method="post" class="hidden" id="form-element-delete-{{ $key }}">
                                     @csrf
                                     @method('delete')

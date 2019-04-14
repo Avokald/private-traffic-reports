@@ -66,6 +66,7 @@ class ReportTest extends TestCase
 
     public function testNewReportDisplayed()
     {
+        $user = \App\User::findOrFail(1);
         $report = Report::create([
             'title' => 'Test report',
             'description' => 'Test report description',
@@ -79,7 +80,7 @@ class ReportTest extends TestCase
             ],
         ]);
 
-        $response = $this->get('/');
+        $response = $this->actingAs($user)->get('/');
 
         $response->assertSee('Test report');
         $response->assertSee('Test report description');
@@ -140,6 +141,8 @@ class ReportTest extends TestCase
 
     public function testReportImagesAreDisplayedOnFrontPage()
     {
+        $user = \App\User::findOrFail(1);
+
         $report = factory(\App\Report::class)->state('test')->create([
             'images' => [
                 '/public/assets/images/auth-img.png',
@@ -150,7 +153,7 @@ class ReportTest extends TestCase
             ],
         ]);
 
-        $response = $this->get('/');
+        $response = $this->actingAs($user)->get('/');
 
         $response->assertStatus(200);
 

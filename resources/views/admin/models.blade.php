@@ -20,12 +20,48 @@
         .button-delete-background {
             color: red;
         }
+
+        .sidebar {
+            width: 10%;
+            height: inherit;
+            float: left;
+        }
+
+        .main-content {
+            width: 90%;
+            float: left;
+        }
+        
+        .main-content::after {
+            display: table;
+            content: "";
+            clear: both;
+        }
+
+
     </style>
 </head>
-<body>
+<body style="height: 100%">
+
+<aside class="sidebar">
+    <div class="sidebar_element">
+        <div class="dropdown">Происшествия
+            <a class="dropdown-item nav-link" href="{{ route('admin.reports.index') }}">Все</a>
+            <a class="dropdown-item nav-link" href="{{ route('admin.reports.create') }}">Создать</a>
+        </div>
+        <hr class="dropdown-divider">
+
+        <div class="dropdown">Пользователи
+            <a class="dropdown-item nav-link" href="{{ route('admin.users.index') }}">Все</a>
+            <a class="dropdown-item nav-link" href="{{ route('admin.users.create') }}">Создать</a>
+        </div>
+        <hr class="dropdown-divider">
 
 
-<main>
+    </div>
+</aside>
+
+<main class="main-content">
     @yield('content')
 </main>
 

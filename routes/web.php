@@ -11,15 +11,11 @@
 |
 */
 
-Route::get('/', function () {
-    $reports = \App\Report::all();
+Route::get('/', 'HomeController@index')->name('home');
 
-    return view('welcome', compact('reports'));
-})->name('home');
-
-Route::get('/reports/create', 'Web\ReportController@create')->name('reports.create');
-Route::post('/reports/', 'Web\ReportController@store')->name('reports.store');
-Route::patch('/reports/{report}', 'Web\ReportController@update')->name('reports.update');
+//Route::get('/reports/create', 'Web\ReportController@create')->name('reports.create');
+//Route::post('/reports/', 'Web\ReportController@store')->name('reports.store');
+//Route::patch('/reports/{report}', 'Web\ReportController@update')->name('reports.update');
 
 Route::group([
     'prefix' => 'admin',
@@ -28,4 +24,11 @@ Route::group([
     'as' => 'admin.',
 ], function() {
     Route::resource('reports', 'ReportController');
+    Route::resource('users', 'UserController');
 });
+
+Auth::routes();
+
+Route::get('/home', function() {
+    return view('home');
+})->name('home');

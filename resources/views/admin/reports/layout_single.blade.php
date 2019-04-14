@@ -9,8 +9,8 @@
 @section('content')
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/admin/reports/">Список проишествий</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Проишествие</li>
+            <li class="breadcrumb-item"><a href="/admin/reports/">Все происшествия</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Происшествие</li>
         </ol>
     </nav>
 

@@ -37,14 +37,32 @@
                 flex-direction: row;
                 flex-wrap: wrap;
             }
+            .time-filter {
+                margin-top: 10px;
+            }
 
         </style>
     </head>
     <body>
+
+        @if (Auth::user()->id === 1)
+            <div class="goto-admin btn fixed-top">
+                <a class="nav-link text-black-50" href="{{ route('admin.reports.index') }}">Перейти в панель администратора</a>
+            </div>
+        @endif
+
         <div id="map"></div>
+        <div class="time-filter">
+            <form method="get" action="#">
+                <input type="date" name="f" value="{{ request()->f }}">
+                <input type="date" name="t" value="{{ request()->t }}">
+                <input type="submit" value="показать">
+            </form>
+        </div>
+
 
         <script src="/public/js/jquery.min.js"></script>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYzwvnXcXQFr16PVDQ4mva-LK41IUli6I&callback=initMap"
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYzwvnXcXQFr16PVDQ4mva-LK41IUli6I&callback=initMap&language=ru"
                 async defer></script>
 
         <script src="/public/js/bootstrap.min.js"></script>
@@ -53,18 +71,44 @@
 
             function initMap() {
 
+                var icon_white = {
+                    url: 'https://cdn3.iconfinder.com/data/icons/business-life-1/532/placeholder_map_marker_position_pinpoint-512.png',
+                    scaledSize: new google.maps.Size(40, 25),
+                    origin: new google.maps.Point(0,0),
+                    anchor: new google.maps.Point(0, 0)
+                };
+
+                var icon_black = {
+                    url: 'https://cdn2.iconfinder.com/data/icons/picons-essentials/71/location-512.png',
+                    scaledSize: new google.maps.Size(40, 25),
+                    origin: new google.maps.Point(0,0),
+                    anchor: new google.maps.Point(0, 0)
+                };
                 map = new google.maps.Map(document.getElementById('map'), {
                     center: { lat: 52.279141, lng: 76.953151 },
-                    zoom: 13
+                    zoom: 13,
+                    zoomControl: true,
+                    mapTypeControl: true,
+                    mapTypeControlOptions: {
+                        mapTypeIds: ['satellite', 'terrain']
+                    },
+                    scaleControl: true,
+                    streetViewControl: false,
+                    rotateControl: true,
+                    fullscreenControl: false,
                 });
+                var time_filter = document.getElementsByClassName("time-filter")[0];
+                map.controls[google.maps.ControlPosition.TOP_RIGHT].push(time_filter);
+
 
                 var infowindow = new google.maps.InfoWindow();
 
-                @foreach ($reports as $report)
+                @foreach ($reports as $key => $report)
 
                     var marker = new google.maps.Marker({
                         position: { lat: {{ $report->lat }}, lng: {{ $report->lng }} },
                         map: map,
+                        icon: <?= ($key % 2) ? 'icon_white' : 'icon_black'; ?> ,
                         title: '{{ $report->title }}'
                     });
 
@@ -93,8 +137,8 @@
                                                 <div class="carousel-item active">
                                                     <img class="d-block w-100" src="{{ $report->images[0] }}" alt="Report image">
                                                 </div>
-                                                @foreach($report->images as $key => $image)
-                                                    @if ($key)
+                                                @foreach($report->images as $image_key => $image)
+                                                    @if ($image_key)
                                                         <div class="carousel-item">
                                                             <img class="d-block w-100" src="{{ $image }}" alt="Report image">
                                                         </div>
@@ -139,6 +183,14 @@
                                                 @endforeach
                                             </div>
                                         </div>
+                                    @endif
+                                    @if (Auth::user()->id === 1)
+                                        <form action="{{ route('admin.reports.destroy', $report->id) }}"
+                                              method="post" class="hidden" id="form-element-delete-{{ $key }}">
+                                            @csrf
+                                            @method('delete')
+                                            <button>Удалить</button>
+                                        </form>
                                     @endif
                                 </div>
                             </div>`
