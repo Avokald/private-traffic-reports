@@ -9,7 +9,7 @@
                                 <div class="col-sm-11 mt-4">
                                     @include($template, [
                                         'label' => '',
-                                        'name' => $name ?? '',
+                                        'name' => $name.'[]' ?? '',
                                         'value' => $element ?? '',
                                     ])
                                 </div>

@@ -22,7 +22,7 @@ class HelperController extends Controller
             "public/images/$folder_name/$subfolder_name", $image->getClientOriginalName());
 
         return [
-            'error' => false,
+            'error' => 0,
             'url' => $image_url,
         ];
     }

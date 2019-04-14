@@ -26,6 +26,7 @@ Route::group([
     Route::post('upload-image', 'HelperController@uploadImage')->name('upload-image');
 
     Route::resource('reports', 'ReportController');
+    Route::resource('categories', CategoryController::class);
     Route::resource('users', 'UserController');
 });
 

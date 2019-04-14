@@ -58,6 +58,12 @@
         </div>
         <hr class="dropdown-divider">
 
+        <div class="dropdown">Категории
+            <a class="dropdown-item nav-link" href="{{ route('admin.categories.index') }}">Все</a>
+            <a class="dropdown-item nav-link" href="{{ route('admin.categories.create') }}">Создать</a>
+        </div>
+        <hr class="dropdown-divider">
+
 
     </div>
 </aside>

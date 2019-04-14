@@ -1,6 +1,13 @@
 @extends('admin.models')
 
 @section('content')
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/admin/reports/">Пользователи</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Пользователь</li>
+        </ol>
+    </nav>
+
     <div class="table table-responsive table-hover">
         <table class="table table-striped table-vcenter table-bordered text-center">
             <thead class="thead-dark">

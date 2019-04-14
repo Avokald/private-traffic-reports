@@ -38,6 +38,17 @@
 
                     <div class="card mb-3">
                         <div class="card-header">
+                            <h4>Категория</h4>
+                        </div>
+                        @include('partials.select_one', [
+                            'label' => '',
+                            'name' => 'category',
+                            'value' => $report->category(),
+                        ])
+                    </div>
+
+                    <div class="card mb-3">
+                        <div class="card-header">
                             <h4>Описание</h4>
                         </div>
                         <div class="form-group">
@@ -56,7 +67,7 @@
                         <div class="form-group">
                             @include('partials.repeater', [
                                 'label' => '',
-                                'name' => 'images[]',
+                                'name' => 'images',
                                 'class' => 'images-element',
                                 'template' => 'partials.image',
                                 'value' => $report->images ?? null,
@@ -71,7 +82,7 @@
                         <div class="form-group">
                             @include('partials.repeater', [
                                 'label' => '',
-                                'name' => 'videos[]',
+                                'name' => 'videos',
                                 'class' => 'videos-element',
                                 'template' => 'partials.text',
                                 'value' => $report->videos ?? null,

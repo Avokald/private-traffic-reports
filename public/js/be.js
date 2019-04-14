@@ -43,9 +43,9 @@ jQuery(function() {
                 url: ajax_image_upload_url,
                 data: data,
                 success: function (response) {
-                    console.log(response);
                     it.siblings(".ajax-image-value").val(response['url']);
-                    it.siblings(".ajax-image-preview").attr('src', response['url']);
+                    it.siblings().find(".ajax-image-preview").attr('src', response['url']);
+                    it.siblings().find(".ajax-image-preview").removeAttr('hidden');
                 },
                 cache: false,
                 contentType: false,

@@ -1,13 +1,16 @@
-<div class="form-group">
+<div class="form-group mb-4">
     <div class="col-sm-12">
         <div class="form-material">
-            <textarea class="form-control"
+            @if (isset($label) && $label)
+                <div class="form-text">{{ $label }}</div>
+            @endif
+
+            <textarea class="form-control shadow-sm" rows="8"
                       name="{{ $name }}" {{
                       isset($required) ? ' required ' : ''
             }}>{{
                 $value
             }}</textarea>
-            <label>{{ $label }}</label>
         </div>
     </div>
 </div>

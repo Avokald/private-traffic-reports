@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
     {
         // $this->call(UsersTableSeeder::class);
          $this->call(ReportsTableSeeder::class);
+         $this->call(CategoriesTableSeeder::class);
 
          $admin = \App\User::create([
              'name' => '1',
@@ -26,5 +27,7 @@ class DatabaseSeeder extends Seeder
              'email' => 'user@example.com',
              'password' => Hash::make('123'),
          ]);
+
+
     }
 }
