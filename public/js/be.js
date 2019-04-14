@@ -1,4 +1,10 @@
 jQuery(function() {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
     $("body").on("click", ".repeater-add-el", function(event) {
         event.preventDefault();
 
@@ -24,5 +30,27 @@ jQuery(function() {
     }).on('input', function () {
         this.style.height = 'auto';
         this.style.height = (this.scrollHeight) + 'px';
+    });
+
+    $("body").on("change", ".ajax-image-upload", function () {
+        var it = $(this);
+        console.log(this.files);
+        if (this.files && this.files[0]) {
+            var data = new FormData();
+            data.append('image', this.files[0]);
+            $.ajax({
+                method: 'POST',
+                url: ajax_image_upload_url,
+                data: data,
+                success: function (response) {
+                    console.log(response);
+                    it.siblings(".ajax-image-value").val(response['url']);
+                    it.siblings(".ajax-image-preview").attr('src', response['url']);
+                },
+                cache: false,
+                contentType: false,
+                processData: false,
+            });
+        }
     });
 });

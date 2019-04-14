@@ -58,7 +58,7 @@
                                 'label' => '',
                                 'name' => 'images[]',
                                 'class' => 'images-element',
-                                'template' => 'partials.text',
+                                'template' => 'partials.image',
                                 'value' => $report->images ?? null,
                             ])
                         </div>

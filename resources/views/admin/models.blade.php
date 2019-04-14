@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/public/css/normalize.css" type="text/css">
     <link rel="stylesheet" href="/public/css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <style>
         @yield('style')
@@ -69,6 +70,12 @@
 <div class="block-saver hide" style="display: none;">
     @stack('hidden')
 </div>
+
+<script>
+    var ajax_image_upload_url = '{{ route('admin.upload-image') }}';
+    console.log(ajax_image_upload_url);
+</script>
+
 @section('scripts')
     <script src="/public/js/jquery.min.js"></script>
     <script src="/public/js/be.js"></script>

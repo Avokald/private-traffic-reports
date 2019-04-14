@@ -8,9 +8,46 @@ use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
+    private $fields = [
+        [
+            'title' => 'Заголовок',
+            'field_name' => 'title',
+            'placeholder' => '',
+            'template' => 'text',
+        ],
+        [
+            'title' => 'Описание',
+            'field_name' => 'description',
+            'placeholder' => '',
+            'template' => 'textarea',
+        ],
+        [
+            'title' => 'Изображениея',
+            'field_name' => 'images[]',
+            'placeholder' => '',
+            'template' => 'repeater',
+            'repeater-type' => 'image',
+        ],
+        [
+            'title' => 'Видео',
+            'field_name' => 'videos[]',
+            'placeholder' => '',
+            'template' => 'repeater',
+            'repeater-type' => 'video',
+        ],
+        [
+            'title' => 'Карта',
+            'field_name' => '',
+            'placeholder' => '',
+            'template' => 'map',
+        ],
+    ];
+
     public function __construct()
     {
         $this->middleware(\App\Http\Middleware\Admin\AdminAuthenticate::class);
+
+
     }
 
     /**

@@ -23,6 +23,8 @@ Route::group([
 //    'middleware' => 'admin',
     'as' => 'admin.',
 ], function() {
+    Route::post('upload-image', 'HelperController@uploadImage')->name('upload-image');
+
     Route::resource('reports', 'ReportController');
     Route::resource('users', 'UserController');
 });
