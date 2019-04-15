@@ -81,7 +81,13 @@ class ReportController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'title' => 'required',
+        ]);
         $report = Report::create($request->toArray());
+        $tags = $request->tags ?? [];
+        $report->tags()->sync($tags);
+        $report->save();
         return redirect()->route('admin.reports.edit', $report->id);
     }
 
@@ -109,6 +115,9 @@ class ReportController extends Controller
         $report = Report::findOrFail($reportId);
 
         $report->update($request->toArray());
+
+        $tags = $request->tags ?? [];
+        $report->tags()->sync($tags);
 
         $report->save();
         return redirect()->route('admin.reports.edit', $reportId);

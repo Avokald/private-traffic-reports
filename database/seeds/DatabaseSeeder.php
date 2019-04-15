@@ -15,6 +15,16 @@ class DatabaseSeeder extends Seeder
         // $this->call(UsersTableSeeder::class);
          $this->call(ReportsTableSeeder::class);
          $this->call(CategoriesTableSeeder::class);
+         $this->call(TagsTableSeeder::class);
+
+         foreach(\App\Report::all() as $report) {
+            $report->setAttribute('category_id', \App\Category::all()->random()->id);
+            $report->save();
+         }
+
+         foreach(\App\Tag::all() as $tag) {
+            $tag->reports()->syncWithoutDetaching([\App\Report::all()->random()->id]);
+         }
 
          $admin = \App\User::create([
              'name' => '1',

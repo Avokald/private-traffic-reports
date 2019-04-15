@@ -64,6 +64,12 @@
         </div>
         <hr class="dropdown-divider">
 
+        <div class="dropdown">Теги
+            <a class="dropdown-item nav-link" href="{{ route('admin.tags.index') }}">Все</a>
+            <a class="dropdown-item nav-link" href="{{ route('admin.tags.create') }}">Создать</a>
+        </div>
+        <hr class="dropdown-divider">
+
 
     </div>
 </aside>

@@ -22,10 +22,16 @@
                 @foreach ($values as $value_key => $value_item)
                     <tr>
                         @foreach ($fields as $field_name => $field_parameters)
-                            @if (isset($field_parameters['template'])
-                            && ($field_parameters['template'] === 'image')
-                            && $value_item->$field_name)
-                                <td><img src="{{ $value_item->$field_name }}" width="50" height="50"></td>
+                            @if (isset($field_parameters['template']) && $value_item->$field_name)
+                                @switch ($field_parameters['template'])
+                                    @case('image')
+                                        <td><img src="{{ $value_item->$field_name }}" width="50" height="50"></td>
+                                    @break
+
+                                    @case('color')
+                                        <td style="background-color: {{ $value_item->$field_name }}" width="50" height="50"></td>
+                                    @break
+                                @endswitch
                             @else
                                 <td>{{ $value_item->$field_name }}</td>
                             @endif

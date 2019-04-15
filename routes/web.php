@@ -25,9 +25,10 @@ Route::group([
 ], function() {
     Route::post('upload-image', 'HelperController@uploadImage')->name('upload-image');
 
-    Route::resource('reports', 'ReportController');
+    Route::resource('reports', ReportController::class);
     Route::resource('categories', CategoryController::class);
-    Route::resource('users', 'UserController');
+    Route::resource('tags', TagController::class);
+    Route::resource('users', UserController::class);
 });
 
 Auth::routes();
