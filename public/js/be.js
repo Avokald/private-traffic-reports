@@ -53,4 +53,7 @@ jQuery(function() {
             });
         }
     });
+
+    $(".filter-select-single").select2();
+    $(".filter-select-multiple").select2();
 });

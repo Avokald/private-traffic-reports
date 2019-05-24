@@ -20,7 +20,7 @@
                     @if ($value->first() != null)
                         <option value="{{ $item->id }}"{{ (in_array($item->id, $ids, true)) ? ' selected' : ''}}>{{ $item->title }}</option>
                     @else
-                        <option value="{{ $item->get() }}">{{ $item->title }}</option>
+                        <option value="{{ $item->id }}">{{ $item->title }}</option>
                     @endif
                 @endforeach
             </select>

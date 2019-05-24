@@ -6,8 +6,10 @@ $factory->define(App\Report::class, function (Faker $faker) {
     return [
         'title' => $faker->streetName,
         'description' => $faker->text,
-        'lat' => '52.2' . $faker->numberBetween(40000, 999999),
-        'lng' => '7'    . $faker->numberBetween(6.910912, 7.03000),
+        'lat' => '52.2' . $faker->numberBetween(50000, 99999),
+        'lng' => '7'    . ($faker->numberBetween(6940912, 7030000) / 1000000),
+        'created_at' => $faker->dateTimeBetween('-5 years'),
+        'category_id' => \App\Category::all()->random()->id,
     ];
 });
 

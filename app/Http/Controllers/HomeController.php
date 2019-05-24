@@ -24,19 +24,57 @@ class HomeController extends Controller
      */
     public function index()
     {
-        if (isset(request()->f) && isset(request()->t)) {
+        $query = \App\Report::query();
+        if (isset(request()->f, request()->t)) {
             $validator = Validator::make(request()->all(), [
                 'f' => 'date|date_format:Y-m-d',
                 't' => 'date|date_format:Y-m-d',
             ]);
             if ($validator->fails()) {
-                $reports = [];
+                $query = \App\Report::where('id', 0);
             } else {
-                $reports = \App\Report::whereBetween('created_at', [request()->f, request()->t])->get();
+                $query = $query->whereBetween('created_at', [request()->f, request()->t]);
             }
-        } else {
-            $reports = \App\Report::all();
         }
-        return view('welcome', compact('reports'));
+
+        if (isset(request()->category_id)) {
+            $validator = Validator::make(request()->all(), [
+                'category_id' => 'integer',
+            ]);
+            if ($validator->fails()) {
+                $query = \App\Report::where('id', 0);
+            } else {
+                $query = $query->where('category_id', request()->category_id);
+            }
+        }
+
+
+        if (isset(request()->tags_id)) {
+            $validator = Validator::make(request()->all(), [
+                'tags_id' => 'array',
+            ]);
+            if ($validator->fails()) {
+                $query = \App\Report::where('id', 0);
+            } else {
+                $request_tags = request()->tags_id;
+                $query = $query->whereHas('tags', function($q) use ($request_tags) {
+                    $q->whereIn('id', $request_tags);
+                });
+            }
+        }
+
+
+
+
+        $reports = $query->get();
+
+        $allCategories = \App\Category::all();
+        $allTags = \App\Tag::all();
+        return view('welcome',
+            compact(
+                'reports',
+                'allCategories',
+                'allTags')
+        );
     }
 }

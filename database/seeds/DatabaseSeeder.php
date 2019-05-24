@@ -12,28 +12,32 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
-         $this->call(ReportsTableSeeder::class);
+         // $this->call(UsersTableSeeder::class);
          $this->call(CategoriesTableSeeder::class);
          $this->call(TagsTableSeeder::class);
+         $this->call(ReportsTableSeeder::class);
 
          foreach(\App\Report::all() as $report) {
             $report->setAttribute('category_id', \App\Category::all()->random()->id);
             $report->save();
          }
 
-         foreach(\App\Tag::all() as $tag) {
-            $tag->reports()->syncWithoutDetaching([\App\Report::all()->random()->id]);
+         foreach(\App\Report::all() as $report) {
+            $report->tags()->syncWithoutDetaching([\App\Tag::all()->random()->id]);
+         }
+
+         foreach(\App\Report::all() as $report) {
+            $report->tags()->syncWithoutDetaching([\App\Tag::all()->random()->id]);
          }
 
          $admin = \App\User::create([
-             'name' => '1',
+             'name' => 'Admin',
              'email' => 'admin@example.com',
              'password' => Hash::make('111'),
          ]);
 
          $user2 = \App\User::create([
-             'name' => '2',
+             'name' => 'User',
              'email' => 'user@example.com',
              'password' => Hash::make('123'),
          ]);

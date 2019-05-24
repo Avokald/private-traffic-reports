@@ -41,7 +41,7 @@
                     </div>
                     @include('partials.select_one', [
                         'label' => '',
-                        'name' => 'category',
+                        'name' => 'category_id',
                         'value' => $report->category(),
                     ])
                 </div>
@@ -52,7 +52,7 @@
                     </div>
                     @include('partials.select_multiple', [
                         'label' => '',
-                        'name' => 'tags',
+                        'name' => 'tags[]',
                         'value' => $report->tags(),
                     ])
                 </div>

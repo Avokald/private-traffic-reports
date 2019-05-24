@@ -15,7 +15,7 @@ class AdminAuthenticate
      */
     public function handle($request, Closure $next)
     {
-        if (auth()->user()->name != '1') {
+        if (!isset(auth()->user()->id) || auth()->user()->id !== 1) {
             return redirect('/');
         }
         return $next($request);

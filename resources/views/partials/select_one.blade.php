@@ -12,7 +12,7 @@
                     @if ($value->first() != null)
                         <option value="{{ $item->id }}"{{ ($item->id === $value->first()->id ) ? ' selected' : ''}}>{{ $item->title }}</option>
                     @else
-                        <option value="{{ $item->get() }}">{{ $item->title }}</option>
+                        <option value="{{ $item->id }}">{{ $item->title }}</option>
                     @endif
                 @endforeach
             </select>
