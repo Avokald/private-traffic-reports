@@ -13,10 +13,21 @@ class Report extends Model
         'lng',
         'videos',
         'images',
+        'category_id',
     ];
 
     protected $casts = [
         'videos' => 'array',
         'images' => 'array',
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, 'report_tag');
+    }
 }

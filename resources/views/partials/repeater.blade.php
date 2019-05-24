@@ -6,14 +6,14 @@
                     @foreach ($value as $key => $element)
                         <div class="{{ $class }} repeater-item">
                             <div class="row">
-                                <div class="col-sm-11 mt-4">
+                                <div class="col-11 mt-4">
                                     @include($template, [
                                         'label' => '',
-                                        'name' => $name ?? '',
+                                        'name' => $name.'[]' ?? '',
                                         'value' => $element ?? '',
                                     ])
                                 </div>
-                                <button class="repeater-delete-el btn btn-danger pull-right ">Удалить</button>
+                                <button class="repeater-delete-el btn btn-danger h-50">Удалить</button>
                             </div>
                         </div>
                     @endforeach
