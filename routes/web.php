@@ -11,6 +11,28 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', 'HomeController@index')->name('home');
+
+//Route::get('/reports/create', 'Web\ReportController@create')->name('reports.create');
+//Route::post('/reports/', 'Web\ReportController@store')->name('reports.store');
+//Route::patch('/reports/{report}', 'Web\ReportController@update')->name('reports.update');
+
+Route::group([
+    'prefix' => 'admin',
+    'namespace' => 'Admin',
+//    'middleware' => 'admin',
+    'as' => 'admin.',
+], function() {
+    Route::post('upload-image', 'HelperController@uploadImage')->name('upload-image');
+
+    Route::resource('reports', ReportController::class);
+    Route::resource('categories', CategoryController::class);
+    Route::resource('tags', TagController::class);
+    Route::resource('users', UserController::class);
 });
+
+Auth::routes();
+
+Route::get('/home', function() {
+    return view('home');
+})->name('home');
